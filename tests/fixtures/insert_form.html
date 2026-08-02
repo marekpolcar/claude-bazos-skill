@@ -1,0 +1,47 @@
+<!-- FIXTURE PROVENANCE: SYNTHETIC. The authed insert form is auth-gated (anon GET
+     returns the SMS gate — see sms_gate.html), so it could not be captured offline.
+     This encodes the documented form contract (DESIGN §2, PLAN Global Constraints,
+     verified 2026-07-03): field names, honeypot name+value, hidden vkm, category
+     <select>, souborp[] file input. It is byte-faithful to that contract but is NOT
+     a live capture — the LIVE CANARY (conformance.check against knihy.bazos.cz with
+     an authed session) is the source of truth and MUST reconfirm this shape. All
+     identity values are the fake identity (Jan Novák / 777123456 / example.com). -->
+<!DOCTYPE html><html lang="cs"><head><meta charset="utf-8"><title>Přidat inzerát | Bazoš</title></head><body>
+<form name="formt" id="formt" method=get action=/></form>
+<form name="formpridani" method="post" action="/insert.php" enctype="multipart/form-data">
+  <input type="hidden" name="vkm" value="m">
+  <!-- honeypot: static, must never be touched by the driver -->
+  <input type="text" name="sfdsfrtret" value="afdggfd" style="display:none">
+
+  <select name="category">
+    <option value="">--- vyberte rubriku ---</option>
+    <option value="33">Učebnice</option>
+    <option value="34">Dětské knihy</option>
+    <option value="35">Beletrie</option>
+    <option value="36">Naučná literatura</option>
+    <option value="37">Časopisy</option>
+    <option value="38">Cizojazyčná literatura</option>
+  </select>
+
+  <input type="text" name="nadpis" maxlength="60" value="">
+  <textarea name="popis"></textarea>
+  <input type="text" name="cena" value="">
+  <select name="cenavyber">
+    <option value="">Kč</option>
+    <option value="Dohodou">Dohodou</option>
+    <option value="V textu">V textu</option>
+    <option value="Zdarma">Zdarma</option>
+    <option value="Nabídněte">Nabídněte</option>
+  </select>
+  <input type="text" name="lokalita" value="">
+  <input type="text" name="jmeno" value="Jan Novák">
+  <input type="text" name="telefoni" value="777123456">
+  <input type="text" name="maili" value="jan.novak@example.com">
+  <input type="text" name="heslobazar" value="">
+
+  <input type="file" name="souborp[]" accept="image/jpeg" multiple>
+  <input type="hidden" name="files[]" value="">
+
+  <input type="submit" value="Přidat inzerát">
+</form>
+</body></html>

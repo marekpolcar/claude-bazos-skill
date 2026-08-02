@@ -1,0 +1,18 @@
+# Runtime dependencies for the bazos-inzerce skill.
+#
+# Homebrew Python is PEP 668 externally-managed - install into a venv:
+#   python3 -m venv ~/.bazos-inzerce/venv
+#   ~/.bazos-inzerce/venv/bin/python3 -m pip install -r requirements.txt
+#   ~/.bazos-inzerce/venv/bin/python3 -m playwright install chromium
+#
+# Verified 2026-07-03: playwright 1.61 ships a py3-none wheel (works on
+# Python 3.14); browser-cookie3 >= 0.20.1 handles the Chrome 130+ cookie
+# prefix. No Python pin required.
+
+playwright>=1.61
+browser-cookie3>=0.20.1
+requests>=2.31
+Pillow>=10
+
+# Dev-only (running the test suite) - NOT needed to use the skill:
+pytest>=8.0

@@ -1,0 +1,21 @@
+{
+  "name": "claude-bazos-skill",
+  "description": "Research and sell on bazos.cz end to end: one skill turns raw photos or an item name into a priced ad folder (EXIF-stripped photos, cited price research, drafted text), a second publishes, edits, and deletes those ads through a real browser (Playwright) with preview-confirm safety. Sold outcomes feed back into future pricing. Zero personal data in the repo.",
+  "version": "1.0.0",
+  "author": {
+    "name": "Marek Polcar",
+    "email": "marek@cilf.cz"
+  },
+  "homepage": "https://github.com/marekpolcar/claude-bazos-skill",
+  "repository": "https://github.com/marekpolcar/claude-bazos-skill",
+  "license": "MIT",
+  "keywords": [
+    "claude-code",
+    "skills",
+    "bazos",
+    "classifieds",
+    "inzerce",
+    "playwright",
+    "automation"
+  ]
+}

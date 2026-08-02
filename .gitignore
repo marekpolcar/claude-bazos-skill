@@ -1,0 +1,26 @@
+# OS / editor
+.DS_Store
+*.swp
+*.swo
+.idea/
+.vscode/
+
+# Python
+__pycache__/
+*.pyc
+.pytest_cache/
+.venv/
+venv/
+
+# Runtime state & captures — all user-local, never in the repo (see DESIGN §3)
+state.json
+previews/
+*.raw.html
+*.png
+
+# Secrets
+.env
+.env.local
+
+# SDD scratch (progress ledger) — not part of the deliverable
+.superpowers/
