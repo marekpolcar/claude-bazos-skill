@@ -1,5 +1,6 @@
 ---
 name: bazos-sprava-inzeratu
+argument-hint: "[<prodej-folder>|<ad-id>]"
 description: >-
   Use whenever the user wants to insert, edit, or delete a bazos.cz classified
   ad. Triggers include "vlož inzerát na bazoš", "publikuj to na bazoši",

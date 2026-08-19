@@ -1,5 +1,6 @@
 ---
 name: bazos-priprava-inzeratu
+argument-hint: "[<photo-folder>|<item-name>]"
 description: >-
   Use whenever the user wants to turn items into ready-to-publish bazos.cz ad
   folders. Triggers include "chci prodat tyhle věci", "připrav inzeráty",
