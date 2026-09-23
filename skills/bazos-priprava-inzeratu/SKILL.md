@@ -77,7 +77,8 @@ Every command prints JSON. The output contract is
    Suggest `cena` from the comps, write it into inzerat.md, and list `cena` on
    the `Odvozeno:` line. No comps and no anchor → leave `Cena:` empty and ask.
 4. **Draft `inzerat.md`** - exactly per `references/inzerat-sablona.md`:
-   Nadpis, Cena, Kategorie hint, Lokalita (from step 0), Fotky in publish
+   Nadpis, Cena, Kategorie hint, Typ (Reality only: Prodej / Pronájem),
+   Lokalita (from step 0), Fotky in publish
    order (first = cover, use the cleaned .jpg names), Odvozeno line, popis
    (what it is, edition, confirmed/visible condition, předání/zaslání line).
    Never Heslobazar/Publikováno/Prodáno - those come later.

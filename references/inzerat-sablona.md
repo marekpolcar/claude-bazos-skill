@@ -34,6 +34,10 @@ Osobní předání po předchozí domluvě, zaslání možné, poštovné hradí
   nebo řádek zůstane prázdný a skill se zeptá.
 - **Kategorie** - nápověda pro category resolver (`sekce / rubrika`), ne finální
   hodnota; tu čte sprava živě z webu.
+- **Typ** - jen v sekci Reality, a tam povinný: `Prodej` nebo `Pronájem`
+  (přesně label z formuláře). Do `Kategorie` se typ nepíše - formulář ho má
+  jako samostatný `<select name="type">` a bez tohoto řádku `bazos.py vlozit`
+  odmítne preview. Mimo Reality řádek vynech.
 - **Lokalita** - `obec, PSČ`; parser si bere PSČ, celá hodnota zůstává pro preview.
 - **Fotky** - jména souborů ve složce v pořadí zveřejnění (první = titulní),
   volitelně s popiskem v závorce. Draft bez fotek („from-name" režim) sem píše

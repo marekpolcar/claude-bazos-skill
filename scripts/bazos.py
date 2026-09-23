@@ -34,7 +34,7 @@ FIELD_MAP = {
     "email": "maili",
     "heslobazar": "heslobazar",
 }
-SELECT_FIELDS = {"category", "cenavyber"}  # <select> widgets, not text inputs
+SELECT_FIELDS = {"category", "cenavyber", "typ"}  # <select> widgets, not text inputs
 
 
 # --- pure helpers (offline-tested) ------------------------------------------
@@ -236,7 +236,17 @@ def _delete_confirmed(page, ad_id):
     return _verify_absent(page, ad_id)
 
 
-def _fill_insert_form(page, values, category_value, cenavyber_value=None):
+def _fill_insert_form(page, values, category_value, cenavyber_value=None,
+                      typ_label=None):
+    # Some sections (Reality) carry a required <select name="type"> Prodej /
+    # Pronájem. The conformance canary does not see it and the preview does not
+    # fail on it — left unset, the ad would be refused or filed as the wrong
+    # type — so refuse here, before anything is filled.
+    if page.query_selector('select[name="type"]'):
+        if not typ_label:
+            raise ValueError("rubrika vyžaduje Typ (Prodej/Pronájem): doplň "
+                             "'- **Typ:** Pronájem' do inzerat.md nebo --typ")
+        page.select_option('select[name="type"]', label=typ_label)
     for name, val in values.items():
         page.fill(f'[name="{name}"]', val)
     page.select_option('select[name="category"]', category_value)
@@ -368,6 +378,7 @@ def vlozit(ad, *, preview=True, context=None, storage_state=None,
     sekce = ad_schema._value(ad.get("sekce"))
     category_value = ad_schema._value(ad.get("category"))
     cenavyber_value = ad_schema._value(ad.get("cenavyber"))
+    typ_value = ad_schema._value(ad.get("typ"))
     values = form_field_values(ad)
     workdir = tempfile.mkdtemp(prefix="bazos-photos-")
     try:
@@ -377,7 +388,8 @@ def vlozit(ad, *, preview=True, context=None, storage_state=None,
             page.goto(f"https://{sekce}.bazos.cz/pridat-inzerat.php",
                       wait_until="load")
             _assert_not_gate(page)
-            _fill_insert_form(page, values, category_value, cenavyber_value)
+            _fill_insert_form(page, values, category_value, cenavyber_value,
+                              typ_value)
             photos_ok = _set_photos_and_wait(page, photos)
             if not _honeypot_untouched(page):
                 raise RuntimeError("honeypot/vkm changed during fill — aborting")
@@ -576,6 +588,7 @@ def _build_parser():
     v.add_argument("--sekce", required=True)
     v.add_argument("--category", required=True, help="category option value")
     v.add_argument("--cenavyber")
+    v.add_argument("--typ", help="Prodej / Pronájem (sekce reality)")
     v.add_argument("--submit", action="store_true", help="publish (default preview)")
 
     d = sub.add_parser("smazat", help="delete an ad by id")
@@ -651,6 +664,8 @@ def main(argv=None):  # pragma: no cover - thin CLI, orchestrated by SKILL.md
         ad["category"] = args.category
         if args.cenavyber:
             ad["cenavyber"] = args.cenavyber
+        if args.typ:
+            ad["typ"] = args.typ
         ad.update(auth.get_identity_from_state(auth.get_storage_state()))
         problems = ad_schema.validate(ad)
         if problems:
@@ -664,7 +679,11 @@ def main(argv=None):  # pragma: no cover - thin CLI, orchestrated by SKILL.md
                 return 1
             # persist the ad-management password only when actually publishing
             parse_inzerat.ensure_heslobazar(ad, args.folder)
-        res = vlozit(ad, preview=not args.submit)
+        try:
+            res = vlozit(ad, preview=not args.submit)
+        except ValueError as e:  # form needs a field the folder lacks (Typ)
+            _emit({"ok": False, "problems": [str(e)]})
+            return 1
         # Persist published_url ONLY on a confirmed publish (a real ad id + its
         # /inzerat/ url) — never on the error path, whose dict also carries a
         # "url" (the insert.php page the submit failed on).

@@ -120,3 +120,40 @@ def test_submit_blockers_flags_duplicate_live_ad():
 
 def test_submit_blockers_clean_ad_passes():
     assert bazos.submit_blockers({"nadpis": "Zcela unikátní titul"}, []) == []
+
+
+class _StubPage:
+    """Records fill/select calls; ``has_type`` toggles the Reality <select name=type>."""
+
+    def __init__(self, has_type):
+        self.has_type = has_type
+        self.calls = []
+
+    def query_selector(self, sel):
+        return object() if (self.has_type and sel == 'select[name="type"]') else None
+
+    def fill(self, sel, val):
+        self.calls.append(("fill", sel, val))
+
+    def select_option(self, sel, value=None, label=None):
+        self.calls.append(("select", sel, value, label))
+
+
+def test_fill_insert_form_refuses_missing_typ_when_form_has_it():
+    page = _StubPage(has_type=True)
+    with pytest.raises(ValueError, match="Typ"):
+        bazos._fill_insert_form(page, {"nadpis": "x"}, "65")
+    assert page.calls == []  # refused before touching the form
+
+
+def test_fill_insert_form_selects_typ_first_by_label():
+    page = _StubPage(has_type=True)
+    bazos._fill_insert_form(page, {"nadpis": "x"}, "65", typ_label="Pronájem")
+    assert page.calls[0] == ("select", 'select[name="type"]', None, "Pronájem")
+    assert ("select", 'select[name="category"]', "65", None) in page.calls
+
+
+def test_fill_insert_form_ignores_typ_when_form_lacks_it():
+    page = _StubPage(has_type=False)
+    bazos._fill_insert_form(page, {"nadpis": "x"}, "12")
+    assert not any(c[1] == 'select[name="type"]' for c in page.calls)

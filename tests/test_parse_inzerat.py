@@ -190,3 +190,19 @@ def test_parse_folder_unaffected_by_prodano_line(tmp_path):
     parse_inzerat.save_prodano(str(dst), 250, "2026-07-10")
     ad = parse_inzerat.parse_folder(str(dst))
     assert ad["cena"] == 90  # Cena line wins; Prodáno is not parsed as a field
+
+
+def test_parse_typ_line(tmp_path):
+    (tmp_path / "inzerat.md").write_text(
+        "# Inzerát: byt\n\n"
+        "- **Nadpis (Bazoš):** 2+kk\n"
+        "- **Typ:** Pronájem\n"
+        "- **Cena:** 23000 Kč\n\n"
+        "## Text inzerátu (k vložení)\n\ntext\n", encoding="utf-8")
+    ad = parse_inzerat.parse_folder(str(tmp_path))
+    assert ad["typ"] == "Pronájem"
+    assert ad["cena"] == 23000
+
+
+def test_parse_without_typ_has_no_key():
+    assert "typ" not in parse_inzerat.parse_folder(KNIHA)

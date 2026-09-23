@@ -134,6 +134,11 @@ def parse_folder(path):
     if kat:
         ad["kategorie_hint"] = kat
 
+    # Reality: "Prodej" / "Pronájem" — the form's required <select name="type">.
+    typ = _find(pairs, "typ")
+    if typ:
+        ad["typ"] = typ
+
     heslo = _find(pairs, "heslobazar")
     if heslo:
         ad["heslobazar"] = heslo

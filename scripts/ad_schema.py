@@ -28,7 +28,7 @@ REQUIRED = [
     "photos",
 ]
 
-OPTIONAL = ["cenavyber", "heslobazar", "kategorie_hint"]
+OPTIONAL = ["cenavyber", "heslobazar", "kategorie_hint", "typ"]
 
 # Photo formats bazos accepts as-is (napoveda.php: .jpeg only).
 JPEG_EXTS = {".jpg", ".jpeg"}
